@@ -36,28 +36,16 @@ class EList extends React.Component{
     //Patches the list, as well as all tasks with the list attribute so they maintain their association.
     onSubmit = e => {
         e.preventDefault()
-        const user =this.context.state.userLogged
-        const id = this.props.history.location.state.id
-
-        //Gets previous listname to target associated tasks
-        const listname = this.props.history.location.state.name
-
-        //New name for the list attribute on associated tasks
-        const task = {
-            list: this.state.name
-        }
+        const user = this.context.state.userLogged
+        const name = this.props.history.location.state.id
 
         const list = {
-            user: this.context.state.userLogged,
             name: this.state.name,
             description: this.state.description,
             due: this.state.due,
         }
-        //Patch request for the list and associated tasks
-        Axios.patch(`${URL}/lists?user=${user}&id=${id}&prevName=${listname}`, {
-                list: list,
-                task: task
-        })
+        //Patch request for the list
+        Axios.patch(`${URL}/lists?user=${user}&id=${name}`, list)
         .then((res) => {
             this.setState({
                 name: "",

@@ -11,19 +11,21 @@ import Main from './Pages/index'
 import SignOut from './Components/Navigation/SignOut';
 
 //URL for API
-export const URL = 'https://to-do-list-server-api.herokuapp.com'
-
+// export const URL = 'https://to-do-list-server-api.herokuapp.com'
+export const URL = 'http://localhost:3306'
 
 function App(){
   const [isAuthenticated, setAuthenticated] = useState(false)
   const [state, setState] = useState({
     userLogged: "",
-    activeList: ""
+    activeList: "",
+    listNum: ""
 })
 
 //Provides the logged in state
-  const authenticate = () => {
+  const authenticate = (id) => {
     setAuthenticated(true)
+    setState({ userLogged: id })
   }
 
   const signout = () => {
@@ -31,10 +33,11 @@ function App(){
   }
 
   //Sets the userlogged context value and the activeList context Value for data filtering.
-  const identify = (user, list) => {
+  const identify = (user, list, pos) => {
     console.log(user)
     console.log(list)
-    setState({ userLogged: user, activeList: list })
+    console.log(pos)
+    setState({ userLogged: user, activeList: list, listNum: pos })
   }
   
   

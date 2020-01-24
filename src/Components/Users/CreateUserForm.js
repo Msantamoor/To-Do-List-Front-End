@@ -54,7 +54,9 @@ export default class CUForm extends React.Component {
         const user = {
             username: this.state.username,
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+
+            lists: []
         }
         //Checking to see if username is available
         Axios.get(`${URL}/users-names?username=${this.state.username}`)

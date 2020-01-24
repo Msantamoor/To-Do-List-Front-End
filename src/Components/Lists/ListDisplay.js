@@ -15,7 +15,7 @@ export default class ListDisplay extends Component {
     //Maps the listCollection to allow data elements to fit nicely into a div table.
     listTable = () => {
         return this.props.listCollection.map((data, i) => {
-            return <ListTable obj={data} key={i} clickHandler={this.props.clickHandler} 
+            return <ListTable obj={data} key={i} index={i} clickHandler={this.props.clickHandler} 
             editMenu={this.props.editMenu} 
             isClicked={this.props.isClicked} clickedLists={this.props.clickedLists} 
             deleteOneList={this.props.deleteOneList}

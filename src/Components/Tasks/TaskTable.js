@@ -42,13 +42,12 @@ class TaskTable extends Component {
     }
 
     render() {
-        const id = this.props.obj._id
-        const name = this.props.obj.name
+        const id = this.props.obj.name
 
         return (
             <div 
             shape="rTableRow" 
-            onClick={() => this.props.isClicked(id, name)}
+            onClick={() => this.props.isClicked(id)}
             onClickCapture={() => this.setState({clickedTasks: this.props.clickedTasks})}
             className={(this.checkClicked(id)) ? "rowClicked" : "rowNotClicked"} 
             completed={(this.checkComplete(id)) ? "rowCompleted" : ""}

@@ -35,15 +35,15 @@ class ETask extends React.Component{
     //Patches the selected task, then redirects to task display
     onSubmit = (e) => {
         e.preventDefault()
+        const user = this.context.state.userLogged
         const id = this.props.history.location.state.id
+        const listname = this.context.state.activeList
         const task = {
-            user: this.context.state.userLogged,
             name: this.state.name,
             description: this.state.description,
-            due: this.state.due,
-            list: this.context.state.activeList
+            due: this.state.due
         }
-        Axios.patch(`${URL}/tasks?id=${id}`, task)
+        Axios.patch(`${URL}/tasks?user=${user}&id=${id}&list=${listname}`, task)
         .then((res) => {
             this.setState({
                 name: "",

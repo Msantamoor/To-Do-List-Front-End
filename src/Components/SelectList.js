@@ -12,6 +12,7 @@ export default class SelectList extends Component {
 
     this.state = {
       selection: "",
+      listNumber: "",
       listCollection: [],
       clickedLists: [],
       clickedButtons: [],
@@ -36,8 +37,8 @@ export default class SelectList extends Component {
     const user = this.context.state.userLogged
     Axios.get(`${URL}/lists?user=${user}`)
         .then(res => {
-            console.log(res)
-            this.setState({ listCollection: res.data.data,
+            console.log(res.data.data[0].lists)
+            this.setState({ listCollection: res.data.data[0].lists,
             listsLoaded: true })
 
         })
@@ -78,15 +79,16 @@ export default class SelectList extends Component {
   }
 
   //Selects a list, setting the name as the current selection and triggering a redirect
-  clickHandler(name) {
+  clickHandler(name, pos) {
     console.log(name)
     this.setState({ selection: name });
+    this.setState({ listNumber: pos})
     this.setState({ redirect: true });
   }
 
   //triggers a redirect to the create list form
   addlist(){
-    this.setState({ redirect2: true})
+    this.setState({ redirect2: true })
     
   }
 
@@ -106,12 +108,12 @@ export default class SelectList extends Component {
 
 //Sets state as the current value of the list to edit, to be passed as state on redirect to the update forms.
 //Makes the fields filled with the current values of the list for easier editting.
-  editMenu(obj){
+  editMenu(obj, index){
         this.setState({
             name: obj.name,
             description: obj.description,
             due: obj.due,
-            editId: obj._id 
+            editId: index
         })
         //Removes current name from the unavailable lists to allow patching without changing the name.
         this.state.unavailableLists.splice(this.state.unavailableLists.indexOf(obj.name), 1);
@@ -127,7 +129,7 @@ export default class SelectList extends Component {
         return(
           <AuthContext.Consumer>
             {({identify}) => (
-                <Redirect push={identify(this.context.state.userLogged, this.state.selection)} to={'/CTForm'}/>
+                <Redirect push={identify(this.context.state.userLogged, this.state.selection, this.state.listNumber)} to={'/CTForm'}/>
             )}
           </AuthContext.Consumer>
           
@@ -152,7 +154,7 @@ export default class SelectList extends Component {
           <Redirect push={true} to={{
             pathname: '/EList',
             state: {
-              id: this.state.editId,
+              id: this.state.name,
               name: this.state.name,
               description: this.state.description,
               due: this.state.due,

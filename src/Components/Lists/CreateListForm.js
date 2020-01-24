@@ -25,13 +25,15 @@ class CLForm extends React.Component{
         e.preventDefault()
 
         const list = {
-            user: this.context.state.userLogged,
+            // user: this.context.state.userLogged,
             name: this.state.name,
             description: this.state.desc,
             due: this.state.due,
+
+            tasks: []
         }
       
-        Axios.post(`${URL}/lists`, list)
+        Axios.post(`${URL}/lists?user=${this.context.state.userLogged}`, list)
         .then((res) => {
             console.log(res.data)
             this.setState({

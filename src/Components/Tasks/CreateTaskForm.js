@@ -54,9 +54,10 @@ class CTForm extends React.Component{
     refreshTasks(){
         Axios.get(`${URL}/tasks?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`)
         .then(res => {
-            console.log(res.data)
+            console.log(this.context.state.listNum)
+            console.log(res.data.data[0].lists[this.context.state.listNum].tasks)
             this.setState({
-                 taskCollection: res.data.data,
+                 taskCollection: res.data.data[0].lists[this.context.state.listNum].tasks,
              });
              this.setState({tasksLoaded: true})
         })
@@ -69,13 +70,11 @@ class CTForm extends React.Component{
     onSubmit = (e) => {
         e.preventDefault()
         const task = {
-            user: this.context.state.userLogged,
             name: this.state.name,
             description: this.state.description,
-            due: this.state.due,
-            list: this.context.state.activeList
+            due: this.state.due
         }
-        Axios.post(`${URL}/tasks`, task)
+        Axios.post(`${URL}/tasks?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`, task)
         .then((res) => {
             console.log(res.data)
             this.setState({
@@ -101,7 +100,7 @@ class CTForm extends React.Component{
             name: obj.name,
             description: obj.description,
             due: obj.due,
-            editId: obj._id 
+            editId: obj.name
         })
         //Removes current name from the unavailable tasks to allow patching without changing the name.
         this.state.unavailableTasks.splice(this.state.unavailableTasks.indexOf(obj.name), 1);
@@ -112,16 +111,14 @@ class CTForm extends React.Component{
     //Bulk delete needs to work with names rather than ID, Mongo's Object(ID) method has strict rules preventing aggregate syntax.
     //An array of names can be passed in mimicking perfect aggregate query syntax of endless length for specific deletions in bulk -
     //- with one DeleteMany Request to the Database, duplicate protection on create ensures no unintended deletions.
-    isClicked(id, name){
+    isClicked(id){
         let clicked = (this.state.clickedTasks.includes(id))
        if(clicked === false){
            this.state.clickedTasks.push(id)
-           this.state.clickedTaskNames.push(name)
            return clicked === true
 
        } else if(clicked === true){
            this.state.clickedTasks.splice(this.state.clickedTasks.indexOf(id), 1);
-           this.state.clickedTaskNames.splice(this.state.clickedTaskNames.indexOf(id), 1);
            return clicked === false
        }
     }
@@ -203,7 +200,7 @@ class CTForm extends React.Component{
     //Deletes all currently clicked tasks by sending an array of any length to be converted into aggregate query syntax.
     //All specified tasks are deleted with one Mongo deleteMany function
     deleteSelectedTasks(){
-        const names = this.state.clickedTaskNames
+        const names = this.state.clickedTasks
             Axios.delete(`${URL}/tasks-selected?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`, {
                 params: {
                     names: names

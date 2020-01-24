@@ -29,8 +29,8 @@ class ListTable extends Component {
     }   
 
     render() {
-        const listname = this.props.obj.name
-        const id = this.props.obj._id
+        const index = this.props.index
+        const id = this.props.obj.name
 
         return (
             
@@ -40,7 +40,7 @@ class ListTable extends Component {
             onClickCapture={() => this.setState({clickedLists: this.props.clickedLists})}
             className={(this.checkClicked(id)) ? "rowClicked" : "rowNotClicked"} 
             deletable={(this.checkDeletable(id)) ? "true" : "false"}
-            >
+            > 
                 <div 
                 shape="rTableCell"
                 className={(this.checkClicked(id)) ? "rowClicked" : "rowNotClicked"}>
@@ -61,13 +61,13 @@ class ListTable extends Component {
                 shape="rTableCell">
                     <button 
                     className={(this.checkClicked(id)) ? "Clicked" : "notClicked"} 
-                    onClick={() => this.props.clickHandler(listname)}
+                    onClick={() => this.props.clickHandler(id, index)}
                     shown={(this.checkDeletable(id)) ? "hidden" : ""}
                     >Select</button>
 
                     <button 
                     className="deletebutton"
-                    onClick={() => this.props.deleteOneList(id, listname)}
+                    onClick={() => this.props.deleteOneList(id)}
                     shown={(this.checkDeletable(id)) ? "" : "hidden"}
                     >Delete List?</button>
                 
@@ -75,7 +75,7 @@ class ListTable extends Component {
                 <div
                 shape="rTableCell">
                     <button className={(this.checkClicked(id)) ? "Clicked" : "notClicked"} 
-                    onClick={() => this.props.editMenu(this.props.obj)}
+                    onClick={() => this.props.editMenu(this.props.obj, index)}
                     shown={(this.checkDeletable(id)) ? "hidden" : ""}
                     >Edit</button>
 

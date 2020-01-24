@@ -52,13 +52,7 @@ export default class SIForm extends React.Component {
         .then(res => {
             console.log(res)
             //if the username and password matches, set context value authenticated, and redirect
-            if(res.data === true){
-                console.log('Password matches')
-                this.context.authenticate()
-                this.setState({ attempt: true})
-                this.setState({ redirect: true})
-            //if the username and password does not match, display failed login attempt
-            } else {
+            if(res.data === 'Sign in Failed'){
                 this.setState({
                     username: "", 
                     password: "",
@@ -70,6 +64,13 @@ export default class SIForm extends React.Component {
                 })
                 this.setState({ attempt: false})
                 console.log(`Matching Failed ${this.state.password}`)
+            //if the username and password does not match, display failed login attempt
+            } else {
+                console.log('Password matches')
+                this.context.authenticate(res.data)
+                this.setState({ attempt: true})
+                this.setState({ redirect: true})
+                
             }
         })
         .catch(function(error){
@@ -81,16 +82,22 @@ export default class SIForm extends React.Component {
     render(){
 
         //Set userLogged context value, and redirect to list selection.
-        if(this.state.redirect){
-            console.log('login successful')
+        // if(this.state.redirect){
+        //     console.log('login successful')
+        //     return(
+        //     <AuthContext.Consumer>
+        //     {({identify}) => (
+        //         <Redirect push={identify(this.context.state.userlogged, this.context.state.activeList)} to={'/Select'}/>
+        //     )}
+        //     </AuthContext.Consumer>
+        //     )
+        //     }
+
+        if (this.state.redirect){
             return(
-            <AuthContext.Consumer>
-            {({identify}) => (
-                <Redirect push={identify(this.state.username, this.context.state.activeList)} to={'/Select'}/>
-            )}
-            </AuthContext.Consumer>
+                <Redirect push to={'Select'}/>
             )
-            }
+        }
     
         //Checks if each field has valid entries
         var errors = validate(this.state.username, this.state.password);        
