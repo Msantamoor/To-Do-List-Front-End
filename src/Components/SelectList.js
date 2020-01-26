@@ -37,7 +37,7 @@ export default class SelectList extends Component {
     const user = this.context.state.userLogged
     Axios.get(`${URL}/lists?user=${user}`)
         .then(res => {
-            console.log(res.data.data[0].lists)
+            console.log(res.data)
             this.setState({ listCollection: res.data.data[0].lists,
             listsLoaded: true })
 

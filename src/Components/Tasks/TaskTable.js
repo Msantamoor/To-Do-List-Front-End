@@ -36,7 +36,7 @@ class TaskTable extends Component {
         this.setState({ unavailableTasks: this.props.unavailableTasks})
 
         if(this.props.obj.completed === "true"){
-            this.props.completedTasks.push(this.props.obj._id)
+            this.props.completedTasks.push(this.props.obj.name)
             this.setState({ completedTasks: this.props.completedTasks })
         }
     }

@@ -140,34 +140,28 @@ class CTForm extends React.Component{
     //Patches a specific task to update its completed attribute, displaying greyed out css
     //Primes task to be deleted with the other completed tasks in bulk
     isCompleted(id){
-        Axios.get(`${URL}/tasks-completed?id=${id}&completed=true`)
-        .then(res => {
-            if(res.data === false){
-                const task = { completed: "true" }
-                Axios.patch(`${URL}/tasks?id=${id}`, task)
-            .then((res) => {
-                this.state.completedTasks.push(id)
-                this.refreshTasks()
-            }).catch((error) => {
-                console.log(error)
-            });
-                
-            } else if(res.data === true){
+            if(this.state.completedTasks.includes(id)){
                 const task = { completed: "false" }
-                Axios.patch(`${URL}/tasks?id=${id}`, task)
+                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}`, task)
             .then((res) => {
                 this.state.completedTasks.splice(this.state.completedTasks.indexOf(id), 1);
                 this.refreshTasks()
             }).catch((error) => {
                 console.log(error)
             });
+      
+            } else {
+                const task = { completed: "true" }
+                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}`, task)
+            .then((res) => {
+                this.state.completedTasks.push(id)
+                this.refreshTasks()
+            }).catch((error) => {
+                console.log(error)
+            });
     
             }
-    
-        })
-        .catch(function(error){
-            console.log(error);
-        })
+      
     }
 
     //Deletes a specific task by ID
