@@ -38,7 +38,7 @@ export default class SelectList extends Component {
     Axios.get(`${URL}/lists?user=${user}`)
         .then(res => {
             console.log(res.data)
-            this.setState({ listCollection: res.data.data[0].lists,
+            this.setState({ listCollection: res.data,
             listsLoaded: true })
 
         })
@@ -93,9 +93,9 @@ export default class SelectList extends Component {
   }
 
   //Deletes a list by ID, and all tasks with that list attribute
-  deleteOneList(id, listname){
+  deleteOneList(id){
     console.log(id)
-    Axios.delete(`${URL}/lists?id=${id}&list=${listname}&user=${this.context.state.userLogged}`)
+    Axios.delete(`${URL}/lists?user=${this.context.state.userLogged}&list=${id}`)
     .then(res => {
       //Removes this listname from the unavailable lists for duplicate protection.
         this.state.unavailableLists.splice(this.state.unavailableLists.indexOf(id), 1);
@@ -110,13 +110,13 @@ export default class SelectList extends Component {
 //Makes the fields filled with the current values of the list for easier editting.
   editMenu(obj, index){
         this.setState({
-            name: obj.name,
+            listname: obj.listname,
             description: obj.description,
             due: obj.due,
             editId: index
         })
         //Removes current name from the unavailable lists to allow patching without changing the name.
-        this.state.unavailableLists.splice(this.state.unavailableLists.indexOf(obj.name), 1);
+        this.state.unavailableLists.splice(this.state.unavailableLists.indexOf(obj.listname), 1);
         this.setState({ redirect3: true})
   }
 
@@ -154,8 +154,8 @@ export default class SelectList extends Component {
           <Redirect push={true} to={{
             pathname: '/EList',
             state: {
-              id: this.state.name,
-              name: this.state.name,
+              id: this.state.listname,
+              listname: this.state.listname,
               description: this.state.description,
               due: this.state.due,
               unavailableLists: this.state.unavailableLists

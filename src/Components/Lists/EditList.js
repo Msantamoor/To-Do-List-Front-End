@@ -13,7 +13,7 @@ class EList extends React.Component{
         super(props);
 
         this.state = {
-            name: "",
+            listname: "",
             description: "",
             due: "",
             selection: "",
@@ -40,7 +40,7 @@ class EList extends React.Component{
         const name = this.props.history.location.state.id
 
         const list = {
-            name: this.state.name,
+            listname: this.state.name,
             description: this.state.description,
             due: this.state.due,
         }
@@ -61,7 +61,7 @@ class EList extends React.Component{
     //Retrieving current values of the list to populate the fields for easier editting
     componentDidMount(){
         this.setState({
-            name: this.props.history.location.state.name,
+            listname: this.props.history.location.state.listname,
             description: this.props.history.location.state.description,
             due: this.props.history.location.state.due,
             unavailableLists: this.props.history.location.state.unavailableLists
@@ -86,14 +86,14 @@ class EList extends React.Component{
             <form>
                 <h3>Edit List</h3>
                 <input
-                name="name"
+                name="listname"
                 maxLength={20}
                 placeholder="List Name"
-                value={this.state.name}
+                value={this.state.listname}
                 onChange={e => this.change(e)}
                 />
                 {/* Displays message when the name is a duplicate */}
-                <p className={(this.state.unavailableLists.includes(this.state.name)) ? "shown-messages" : "hidden-messages" } > List names must be unique</p>
+                <p className={(this.state.unavailableLists.includes(this.state.listname)) ? "shown-messages" : "hidden-messages" } > List names must be unique</p>
                 <br/>
                 <input
                 name="description"
@@ -111,7 +111,7 @@ class EList extends React.Component{
                 onChange={e => this.change(e)}
                 />
                 <br/>
-                <button disabled={this.state.name.length === 0} onClick={e => this.onSubmit(e)}>Update List</button>
+                <button disabled={this.state.listname.length === 0} onClick={e => this.onSubmit(e)}>Update List</button>
                 <br/>
                 <button type="button" onClick={() => this.goBack()}>Back</button>
 

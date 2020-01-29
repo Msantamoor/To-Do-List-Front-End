@@ -52,12 +52,12 @@ class CTForm extends React.Component{
 
     //Gets updated tasks from the server, filtered by user and list attributes assigned on creation
     refreshTasks(){
-        Axios.get(`${URL}/tasks?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`)
+        Axios.get(`${URL}/tasks?user=${this.context.state.userLogged}&list=${this.context.state.activeList}&index=${this.context.state.listNum}`)
         .then(res => {
             console.log(this.context.state.listNum)
-            console.log(res.data.data[0].lists[this.context.state.listNum].tasks)
+            console.log(res.data)
             this.setState({
-                 taskCollection: res.data.data[0].lists[this.context.state.listNum].tasks,
+                 taskCollection: res.data,
              });
              this.setState({tasksLoaded: true})
         })
@@ -141,8 +141,8 @@ class CTForm extends React.Component{
     //Primes task to be deleted with the other completed tasks in bulk
     isCompleted(id){
             if(this.state.completedTasks.includes(id)){
-                const task = { completed: "false" }
-                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}`, task)
+                const task = "false"
+                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}&complete=${task}`)
             .then((res) => {
                 this.state.completedTasks.splice(this.state.completedTasks.indexOf(id), 1);
                 this.refreshTasks()
@@ -151,8 +151,8 @@ class CTForm extends React.Component{
             });
       
             } else {
-                const task = { completed: "true" }
-                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}`, task)
+                const task = "true"
+                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}&complete=${task}`, task)
             .then((res) => {
                 this.state.completedTasks.push(id)
                 this.refreshTasks()
@@ -167,7 +167,7 @@ class CTForm extends React.Component{
     //Deletes a specific task by ID
     deleteOneTask(id){
         console.log(id)
-        Axios.delete(`${URL}/tasks?id=${id}`)
+        Axios.delete(`${URL}/tasks?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}`)
         .then(res => {
             this.state.unavailableTasks.splice(0, this.state.unavailableTasks.length)
             this.refreshTasks()
@@ -180,7 +180,7 @@ class CTForm extends React.Component{
 
     //Deletes all tasks in the list with completed: true attributes
     deleteDoneTasks(){
-        Axios.delete(`${URL}/tasks-completed?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`)
+        Axios.delete(`${URL}/tasks-complete?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`)
         .then(res => {
             console.log(res.data)
             this.state.unavailableTasks.splice(0, this.state.unavailableTasks.length)

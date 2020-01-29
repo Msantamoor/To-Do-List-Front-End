@@ -24,13 +24,13 @@ class ListTable extends Component {
 
     //Sends the names of each row on mount, creating the array of unavailable list names
     componentDidMount(){
-        this.props.unavailableLists.push(this.props.obj.name)
+        this.props.unavailableLists.push(this.props.obj.listname)
         this.setState({ unavailableLists: this.props.unavailableLists})
     }   
 
     render() {
         const index = this.props.index
-        const id = this.props.obj.name
+        const id = this.props.obj.listname
 
         return (
             
@@ -44,7 +44,7 @@ class ListTable extends Component {
                 <div 
                 shape="rTableCell"
                 className={(this.checkClicked(id)) ? "rowClicked" : "rowNotClicked"}>
-                    {this.props.obj.name}
+                    {this.props.obj.listname}
                 </div>
                 <div 
                 shape="rTableCell"

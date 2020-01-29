@@ -25,8 +25,7 @@ class CLForm extends React.Component{
         e.preventDefault()
 
         const list = {
-            // user: this.context.state.userLogged,
-            name: this.state.name,
+            listname: this.state.name,
             description: this.state.desc,
             due: this.state.due,
 
