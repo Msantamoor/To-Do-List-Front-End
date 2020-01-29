@@ -80,19 +80,6 @@ export default class SIForm extends React.Component {
     }
 
     render(){
-
-        //Set userLogged context value, and redirect to list selection.
-        // if(this.state.redirect){
-        //     console.log('login successful')
-        //     return(
-        //     <AuthContext.Consumer>
-        //     {({identify}) => (
-        //         <Redirect push={identify(this.context.state.userlogged, this.context.state.activeList)} to={'/Select'}/>
-        //     )}
-        //     </AuthContext.Consumer>
-        //     )
-        //     }
-
         if (this.state.redirect){
             return(
                 <Redirect push to={'Select'}/>
