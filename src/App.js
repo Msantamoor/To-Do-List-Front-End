@@ -11,8 +11,8 @@ import Main from './Pages/index'
 import SignOut from './Components/Navigation/SignOut';
 
 //URL for API
-// export const URL = 'https://to-do-list-server-api.herokuapp.com'
-export const URL = 'http://localhost:3306'
+export const URL = 'https://to-do-list-api-remastered.herokuapp.com/
+// export const URL = 'http://localhost:3306'
 
 function App(){
   const [isAuthenticated, setAuthenticated] = useState(false)
