@@ -86,7 +86,7 @@ class ETask extends React.Component{
                 <h3>Edit Task</h3>
                 <input
                 name="name"
-                maxLength={20}
+                maxLength={30}
                 placeholder="Task Name"
                 value={this.state.name}
                 onChange={e => this.change(e)}
@@ -96,7 +96,7 @@ class ETask extends React.Component{
                 <br/>
                 <input
                 name="description"
-                maxLength={50}
+                maxLength={60}
                 placeholder="What to do"
                 value={this.state.description}
                 onChange={e => this.change(e)}
@@ -104,7 +104,7 @@ class ETask extends React.Component{
                 <br/>
                 <input
                 name="due"
-                maxLength={20}
+                maxLength={30}
                 placeholder="When to have it done"
                 value={this.state.due}
                 onChange={e => this.change(e)}

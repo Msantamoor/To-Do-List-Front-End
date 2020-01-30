@@ -37,7 +37,7 @@ class EList extends React.Component{
     onSubmit = e => {
         e.preventDefault()
         const user = this.context.state.userLogged
-        const name = this.props.history.location.state.id
+        const name = this.props.history.location.state.listname
 
         const list = {
             listname: this.state.listname,
@@ -87,7 +87,7 @@ class EList extends React.Component{
                 <h3>Edit List</h3>
                 <input
                 name="listname"
-                maxLength={20}
+                maxLength={30}
                 placeholder="List Name"
                 value={this.state.listname}
                 onChange={e => this.change(e)}
@@ -97,7 +97,7 @@ class EList extends React.Component{
                 <br/>
                 <input
                 name="description"
-                maxLength={50}
+                maxLength={60}
                 placeholder="What to do"
                 value={this.state.description}
                 onChange={e => this.change(e)}
@@ -105,13 +105,13 @@ class EList extends React.Component{
                 <br/>
                 <input
                 name="due"
-                maxLength={20}
+                maxLength={30}
                 placeholder="When to have it done"
                 value={this.state.due}
                 onChange={e => this.change(e)}
                 />
                 <br/>
-                <button disabled={this.state.listname.length === 0} onClick={e => this.onSubmit(e)}>Update List</button>
+                <button disabled={this.state.listname.length === 0 || this.state.unavailableLists.includes(this.state.listname)} onClick={e => this.onSubmit(e)}>Update List</button>
                 <br/>
                 <button type="button" onClick={() => this.goBack()}>Back</button>
 

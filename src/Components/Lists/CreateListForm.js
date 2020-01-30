@@ -7,7 +7,7 @@ import { URL } from '../../App'
 
 class CLForm extends React.Component{
     state = {
-        name: "",
+        listname: "",
         desc: "",
         due: "",
 
@@ -25,7 +25,7 @@ class CLForm extends React.Component{
         e.preventDefault()
 
         const list = {
-            listname: this.state.name,
+            listname: this.state.listname,
             description: this.state.desc,
             due: this.state.due,
 
@@ -36,7 +36,7 @@ class CLForm extends React.Component{
         .then((res) => {
             console.log(res.data)
             this.setState({
-                name: "",
+                listname: "",
                 desc: "",
                 due: ""
             })
@@ -72,18 +72,18 @@ class CLForm extends React.Component{
             <form>
                 <h3>Create New List</h3>
                 <input
-                name="name"
-                maxLength={20}
+                name="listname"
+                maxLength={30}
                 placeholder="List Name"
-                value={this.state.name}
+                value={this.state.listname}
                 onChange={e => this.change(e)}
                 />
                 {/* Displays a message when the name is a duplicate */}
-                <p className={(this.state.unavailableLists.includes(this.state.name)) ? "shown-messages" : "hidden-messages" } >List names must be unique</p>
+                <p className={(this.state.unavailableLists.includes(this.state.listname)) ? "shown-messages" : "hidden-messages" } >List names must be unique</p>
                 <br/>
                 <input
                 name="desc"
-                maxLength={50}
+                maxLength={60}
                 placeholder="Type of List"
                 value={this.state.desc}
                 onChange={e => this.change(e)}
@@ -91,7 +91,7 @@ class CLForm extends React.Component{
                 <br/>
                 <input
                 name="due"
-                maxLength={20}
+                maxLength={30}
                 placeholder="Timeframe"
                 value={this.state.due}
                 onChange={e => this.change(e)}
@@ -102,7 +102,7 @@ class CLForm extends React.Component{
                 onClick={e => this.onSubmit(e)}
                 >Add List</button>
                 <br/>
-                <button type="button" onClick={() => this.goBack()}>Back</button>
+                <button type="button" disabled={this.state.listname.length === 0 || this.state.unavailableLists.includes(this.state.listname)} onClick={() => this.goBack()}>Back</button>
 
             </form>
             </div>
