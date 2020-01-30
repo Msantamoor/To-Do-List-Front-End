@@ -4,7 +4,7 @@ import 'react-router-dom'
 import { AuthContext } from '../../Context/Authentication'
 import { withRouter, Redirect } from 'react-router-dom';
 import '../../form.css'
-import {URL} from '../../App'
+import { URL } from '../../App'
 
 
 
@@ -40,7 +40,7 @@ class EList extends React.Component{
         const name = this.props.history.location.state.id
 
         const list = {
-            listname: this.state.name,
+            listname: this.state.listname,
             description: this.state.description,
             due: this.state.due,
         }
@@ -48,7 +48,7 @@ class EList extends React.Component{
         Axios.patch(`${URL}/lists?user=${user}&id=${name}`, list)
         .then((res) => {
             this.setState({
-                name: "",
+                listname: "",
                 desc: "",
                 due: ""
             })
