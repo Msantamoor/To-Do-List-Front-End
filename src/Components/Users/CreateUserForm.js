@@ -4,6 +4,7 @@ import Axios from 'axios'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { URL } from '../../App'
+// const argon2i = require('/node_modules/argon2-ffi').argon2i;
 
 //onChange form validation, assigning CSS to fields with errors and determining if all fields are valid for submission.
 function validate(username, email, password, cpassword) {
@@ -49,8 +50,16 @@ export default class CUForm extends React.Component {
       }
 
     //Posting a new user to the DB
-    onSubmit = e => {
+    onSubmit = async (e) => {
         e.preventDefault()
+
+        // try {
+        //     const hash = await argon2i.hash(this.state.password, this.state.username);
+        //     this.setState({ password: hash})
+        //   } catch (err) {
+            
+        //   }
+
         const user = {
             username: this.state.username,
             email: this.state.email,

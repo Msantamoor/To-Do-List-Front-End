@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import '../../App';
 import { AuthContext } from '../../Context/Authentication';
 import {URL} from '../../App'
+// const argon2i = require('node_modules/argon2-ffi').argon2i;
 
 //Checks for valid form entries
 function validate(username, password) {
@@ -45,8 +46,14 @@ export default class SIForm extends React.Component {
       }
 
     //Attempt Sign-in
-    onSubmit = e => {
+    onSubmit = async (e)  => {
         e.preventDefault()
+        // try {
+        //     const hash = await argon2i.hash(this.state.password, this.state.username);
+        //     this.setState({ password: hash})
+        //   } catch (err) {
+            
+        //   }
         //Pass in username and password to be checked
         Axios.get(`${URL}/users-login?username=${this.state.username}&password=${this.state.password}`)
         .then(res => {
