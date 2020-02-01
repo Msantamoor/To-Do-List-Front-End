@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom'
 import '../../App';
 import { AuthContext } from '../../Context/Authentication';
 import {URL} from '../../App'
-// const argon2i = require('node_modules/argon2-ffi').argon2i;
+const bcrypt = require('bcryptjs');
+const sha256 = require('sha256')
 
 //Checks for valid form entries
 function validate(username, password) {
@@ -48,18 +49,10 @@ export default class SIForm extends React.Component {
     //Attempt Sign-in
     onSubmit = async (e)  => {
         e.preventDefault()
-        // try {
-        //     const hash = await argon2i.hash(this.state.password, this.state.username);
-        //     this.setState({ password: hash})
-        //   } catch (err) {
-            
-        //   }
-        //Pass in username and password to be checked
-        Axios.get(`${URL}/users-login?username=${this.state.username}&password=${this.state.password}`)
+        Axios.get(`${URL}/users-check?username=${this.state.username}`)
         .then(res => {
-            console.log(res)
-            //if the username and password matches, set context value authenticated, and redirect
-            if(res.data === 'Sign in Failed'){
+            console.log(`Front end res${res}`)
+            if (res.data === 'Sign in Failed'){
                 this.setState({
                     username: "", 
                     password: "",
@@ -71,18 +64,49 @@ export default class SIForm extends React.Component {
                 })
                 this.setState({ attempt: false})
                 console.log(`Matching Failed ${this.state.password}`)
-            //if the username and password does not match, display failed login attempt
             } else {
-                console.log('Password matches')
-                this.context.authenticate(res.data)
-                this.setState({ attempt: true})
-                this.setState({ redirect: true})
-                
+                const salt = res.data
+                const pepper = sha256(this.state.username)
+                const sp = pepper + sha256(this.state.password)
+                console.log(sp)
+                const hash = bcrypt.hashSync(sp, salt)
+                console.log(hash)
+                //Pass in username and password to be checked
+                Axios.get(`${URL}/users-login?username=${this.state.username}&password=${hash}`)
+                .then(res => {
+                    console.log(res)
+                    //if the username and password matches, set context value authenticated, and redirect
+                    if(res.data === 'Sign in Failed'){
+                        this.setState({
+                            username: "", 
+                            password: "",
+        
+                        touched: {
+                            username: false, 
+                            password: false
+                        }
+                        })
+                        this.setState({ attempt: false})
+                        console.log(`Matching Failed ${this.state.password}`)
+                    //if the username and password does not match, display failed login attempt
+                    } else {
+                        console.log('Password matches')
+                        this.context.authenticate(res.data)
+                        this.setState({ attempt: true})
+                        this.setState({ redirect: true})
+                        
+                    }
+                })
+                .catch(function(error){
+                    console.log(error);
+                })
             }
         })
         .catch(function(error){
             console.log(error);
         })
+        
+        
        
     }
 

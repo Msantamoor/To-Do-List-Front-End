@@ -4,7 +4,8 @@ import Axios from 'axios'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { URL } from '../../App'
-// const argon2i = require('/node_modules/argon2-ffi').argon2i;
+const bcrypt = require('bcryptjs');
+const sha256 = require('sha256')
 
 //onChange form validation, assigning CSS to fields with errors and determining if all fields are valid for submission.
 function validate(username, email, password, cpassword) {
@@ -52,18 +53,18 @@ export default class CUForm extends React.Component {
     //Posting a new user to the DB
     onSubmit = async (e) => {
         e.preventDefault()
-
-        // try {
-        //     const hash = await argon2i.hash(this.state.password, this.state.username);
-        //     this.setState({ password: hash})
-        //   } catch (err) {
-            
-        //   }
+        const pepper = sha256(this.state.username)
+        const salt = bcrypt.genSaltSync(10);
+        const sp = pepper + sha256(this.state.password)
+        console.log(sp)
+        const hash = bcrypt.hashSync(sp, salt)
+        console.log(hash)
 
         const user = {
             username: this.state.username,
             email: this.state.email,
-            password: this.state.password,
+            password: hash,
+            salt: salt,
 
             lists: []
         }
@@ -110,7 +111,7 @@ export default class CUForm extends React.Component {
                 console.log(error)
             }))
              
-            //if username is unavailable, push username to array of unavailable names to check onChange
+            // if username is unavailable, push username to array of unavailable names to check onChange
             } else if(res.data === false){
                 this.state.unavailableUsers.push(this.state.username)
                 this.setState({username: this.state.username})
