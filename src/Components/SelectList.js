@@ -4,7 +4,7 @@ import Axios from 'axios'
 import { Redirect } from 'react-router';
 import {AuthContext} from '../Context/Authentication'
 import '../App.css'
-import {URL} from '../App'
+import { URL } from '../App'
 
 export default class SelectList extends Component {
   constructor(props){

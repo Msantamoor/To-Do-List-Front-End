@@ -5,9 +5,11 @@ import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom'
 import '../../App';
 import { AuthContext } from '../../Context/Authentication';
-import {URL} from '../../App'
+import { URL } from '../../App'
+const secret = 'NeverF7'
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256')
+const jwt = require('jsonwebtoken');
 
 //Checks for valid form entries
 function validate(username, password) {
@@ -51,7 +53,7 @@ export default class SIForm extends React.Component {
         e.preventDefault()
         Axios.get(`${URL}/users-check?username=${this.state.username}`)
         .then(res => {
-            console.log(`Front end res${res}`)
+            console.log(res)
             if (res.data === 'Sign in Failed'){
                 this.setState({
                     username: "", 
@@ -65,7 +67,9 @@ export default class SIForm extends React.Component {
                 this.setState({ attempt: false})
                 console.log(`Matching Failed ${this.state.password}`)
             } else {
-                const salt = res.data
+                const token = jwt.verify(res.data, this.state.username)
+                console.log(token)
+                const salt = token.data
                 const pepper = sha256(this.state.username)
                 const sp = pepper + sha256(this.state.password)
                 console.log(sp)
@@ -90,8 +94,9 @@ export default class SIForm extends React.Component {
                         console.log(`Matching Failed ${this.state.password}`)
                     //if the username and password does not match, display failed login attempt
                     } else {
+                        const auth = jwt.verify(res.data, this.state.username)
                         console.log('Password matches')
-                        this.context.authenticate(res.data)
+                        this.context.authenticate(jwt.sign(auth.data, secret))
                         this.setState({ attempt: true})
                         this.setState({ redirect: true})
                         
