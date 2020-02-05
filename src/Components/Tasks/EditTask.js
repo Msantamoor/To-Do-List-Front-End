@@ -4,6 +4,8 @@ import 'react-router-dom'
 import { AuthContext } from '../../Context/Authentication'
 import { withRouter, Redirect } from 'react-router-dom';
 import { URL } from '../../App'
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
 
 
 
@@ -35,7 +37,7 @@ class ETask extends React.Component{
     //Patches the selected task, then redirects to task display
     onSubmit = (e) => {
         e.preventDefault()
-        const user = this.context.state.userLogged
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_patchTaskKey)
         const id = this.props.history.location.state.id
         const listname = this.context.state.activeList
         const task = {
@@ -86,7 +88,7 @@ class ETask extends React.Component{
                 <h3>Edit Task</h3>
                 <input
                 name="name"
-                maxLength={30}
+                maxLength={50}
                 placeholder="Task Name"
                 value={this.state.name}
                 onChange={e => this.change(e)}
@@ -96,7 +98,7 @@ class ETask extends React.Component{
                 <br/>
                 <input
                 name="description"
-                maxLength={60}
+                maxLength={250}
                 placeholder="What to do"
                 value={this.state.description}
                 onChange={e => this.change(e)}
@@ -104,7 +106,7 @@ class ETask extends React.Component{
                 <br/>
                 <input
                 name="due"
-                maxLength={30}
+                maxLength={50}
                 placeholder="When to have it done"
                 value={this.state.due}
                 onChange={e => this.change(e)}

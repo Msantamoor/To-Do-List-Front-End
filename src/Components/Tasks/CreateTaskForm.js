@@ -6,6 +6,8 @@ import { AuthContext } from '../../Context/Authentication'
 import { Redirect, withRouter } from 'react-router-dom';
 import '../../form.css'
 import { URL } from '../../App'
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
 
 
 
@@ -52,7 +54,8 @@ class CTForm extends React.Component{
 
     //Gets updated tasks from the server, filtered by user and list attributes assigned on creation
     refreshTasks(){
-        Axios.get(`${URL}/tasks?user=${this.context.state.userLogged}&list=${this.context.state.activeList}&index=${this.context.state.listNum}`)
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_getTaskKey)
+        Axios.get(`${URL}/tasks?user=${user}&list=${this.context.state.activeList}&index=${this.context.state.listNum}`)
         .then(res => {
             console.log(this.context.state.listNum)
             console.log(res.data)
@@ -69,12 +72,13 @@ class CTForm extends React.Component{
     //Posts a new task to the DB with user and list context values as attributes for filtering
     onSubmit = (e) => {
         e.preventDefault()
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_postTaskKey)
         const task = {
             name: this.state.name,
             description: this.state.description,
             due: this.state.due
         }
-        Axios.post(`${URL}/tasks?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`, task)
+        Axios.post(`${URL}/tasks?user=${user}&list=${this.context.state.activeList}`, task)
         .then((res) => {
             console.log(res.data)
             this.setState({
@@ -140,9 +144,10 @@ class CTForm extends React.Component{
     //Patches a specific task to update its completed attribute, displaying greyed out css
     //Primes task to be deleted with the other completed tasks in bulk
     isCompleted(id){
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_patchCompleteKey)
             if(this.state.completedTasks.includes(id)){
                 const task = "false"
-                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}&complete=${task}`)
+                Axios.patch(`${URL}/tasks-complete?user=${user}&id=${id}&list=${this.context.state.activeList}&complete=${task}`)
             .then((res) => {
                 this.state.completedTasks.splice(this.state.completedTasks.indexOf(id), 1);
                 this.refreshTasks()
@@ -152,7 +157,7 @@ class CTForm extends React.Component{
       
             } else {
                 const task = "true"
-                Axios.patch(`${URL}/tasks-complete?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}&complete=${task}`, task)
+                Axios.patch(`${URL}/tasks-complete?user=${user}&id=${id}&list=${this.context.state.activeList}&complete=${task}`, task)
             .then((res) => {
                 this.state.completedTasks.push(id)
                 this.refreshTasks()
@@ -166,8 +171,9 @@ class CTForm extends React.Component{
 
     //Deletes a specific task by ID
     deleteOneTask(id){
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_deleteTaskKey)
         console.log(id)
-        Axios.delete(`${URL}/tasks?user=${this.context.state.userLogged}&id=${id}&list=${this.context.state.activeList}`)
+        Axios.delete(`${URL}/tasks?user=${user}&id=${id}&list=${this.context.state.activeList}`)
         .then(res => {
             this.state.unavailableTasks.splice(0, this.state.unavailableTasks.length)
             this.refreshTasks()
@@ -180,7 +186,8 @@ class CTForm extends React.Component{
 
     //Deletes all tasks in the list with completed: true attributes
     deleteDoneTasks(){
-        Axios.delete(`${URL}/tasks-complete?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`)
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_deleteCompleteKey)
+        Axios.delete(`${URL}/tasks-complete?user=${user}&list=${this.context.state.activeList}`)
         .then(res => {
             console.log(res.data)
             this.state.unavailableTasks.splice(0, this.state.unavailableTasks.length)
@@ -194,8 +201,9 @@ class CTForm extends React.Component{
     //Deletes all currently clicked tasks by sending an array of any length to be converted into aggregate query syntax.
     //All specified tasks are deleted with one Mongo deleteMany function
     deleteSelectedTasks(){
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_deleteSelectKey)
         const names = this.state.clickedTasks
-            Axios.delete(`${URL}/tasks-selected?user=${this.context.state.userLogged}&list=${this.context.state.activeList}`, {
+            Axios.delete(`${URL}/tasks-selected?user=${user}&list=${this.context.state.activeList}`, {
                 params: {
                     names: names
                 }
@@ -268,7 +276,7 @@ class CTForm extends React.Component{
                 <h3>Create New Task</h3>
                 <input
                 name="name"
-                maxLength={30}
+                maxLength={50}
                 placeholder="Task Name"
                 value={this.state.name}
                 onChange={e => this.change(e)}
@@ -278,7 +286,7 @@ class CTForm extends React.Component{
                 <br/>
                 <input
                 name="description"
-                maxLength={60}
+                maxLength={250}
                 placeholder="What to do"
                 value={this.state.description}
                 onChange={e => this.change(e)}
@@ -286,7 +294,7 @@ class CTForm extends React.Component{
                 <br/>
                 <input
                 name="due"
-                maxLength={30}
+                maxLength={50}
                 placeholder="When to have it done"
                 value={this.state.due}
                 onChange={e => this.change(e)}

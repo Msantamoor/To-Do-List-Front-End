@@ -5,6 +5,8 @@ import { AuthContext } from '../../Context/Authentication'
 import { withRouter, Redirect } from 'react-router-dom';
 import '../../form.css'
 import { URL } from '../../App'
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
 
 
 
@@ -36,8 +38,8 @@ class EList extends React.Component{
     //Patches the list, as well as all tasks with the list attribute so they maintain their association.
     onSubmit = e => {
         e.preventDefault()
-        const user = this.context.state.userLogged
         const name = this.props.history.location.state.listname
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_patchListKey)
 
         const list = {
             listname: this.state.listname,
@@ -87,7 +89,7 @@ class EList extends React.Component{
                 <h3>Edit List</h3>
                 <input
                 name="listname"
-                maxLength={30}
+                maxLength={50}
                 placeholder="List Name"
                 value={this.state.listname}
                 onChange={e => this.change(e)}
@@ -97,7 +99,7 @@ class EList extends React.Component{
                 <br/>
                 <input
                 name="description"
-                maxLength={60}
+                maxLength={250}
                 placeholder="What to do"
                 value={this.state.description}
                 onChange={e => this.change(e)}
@@ -105,7 +107,7 @@ class EList extends React.Component{
                 <br/>
                 <input
                 name="due"
-                maxLength={30}
+                maxLength={50}
                 placeholder="When to have it done"
                 value={this.state.due}
                 onChange={e => this.change(e)}

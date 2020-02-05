@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import '../../App';
 import { AuthContext } from '../../Context/Authentication';
 import { URL } from '../../App'
-const secret = 'NeverF7'
+require('dotenv').config()
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256')
 const jwt = require('jsonwebtoken');
@@ -67,7 +67,7 @@ export default class SIForm extends React.Component {
                 this.setState({ attempt: false})
                 console.log(`Matching Failed ${this.state.password}`)
             } else {
-                const token = jwt.verify(res.data, this.state.username)
+                const token = jwt.verify(res.data, process.env.REACT_APP_outSaltKey)
                 console.log(token)
                 const salt = token.data
                 const pepper = sha256(this.state.username)
@@ -94,9 +94,9 @@ export default class SIForm extends React.Component {
                         console.log(`Matching Failed ${this.state.password}`)
                     //if the username and password does not match, display failed login attempt
                     } else {
-                        const auth = jwt.verify(res.data, this.state.username)
+                        const auth = jwt.verify(res.data, process.env.REACT_APP_signKey)
                         console.log('Password matches')
-                        this.context.authenticate(jwt.sign(auth.data, secret))
+                        this.context.authenticate(auth.data)
                         this.setState({ attempt: true})
                         this.setState({ redirect: true})
                         

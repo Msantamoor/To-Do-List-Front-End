@@ -5,6 +5,8 @@ import { Redirect } from 'react-router';
 import {AuthContext} from '../Context/Authentication'
 import '../App.css'
 import { URL } from '../App'
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
 
 export default class SelectList extends Component {
   constructor(props){
@@ -34,7 +36,7 @@ export default class SelectList extends Component {
 
   //Gets current lists from the DB, filtered by the current userLogged
   refreshLists = () => {
-    const user = this.context.state.userLogged
+    const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_getListKey)
     Axios.get(`${URL}/lists?user=${user}`)
         .then(res => {
             console.log(res.data)
@@ -95,7 +97,8 @@ export default class SelectList extends Component {
   //Deletes a list by ID, and all tasks with that list attribute
   deleteOneList(id){
     console.log(id)
-    Axios.delete(`${URL}/lists?user=${this.context.state.userLogged}&list=${id}`)
+    const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_deleteListKey)
+    Axios.delete(`${URL}/lists?user=${user}&list=${id}`)
     .then(res => {
       //Removes this listname from the unavailable lists for duplicate protection.
         this.state.unavailableLists.splice(this.state.unavailableLists.indexOf(id), 1);

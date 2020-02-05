@@ -3,6 +3,8 @@ import Axios from 'axios';
 import { AuthContext } from '../../Context/Authentication';
 import { withRouter, Redirect } from 'react-router-dom';
 import { URL } from '../../App'
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
 
 
 class CLForm extends React.Component{
@@ -23,7 +25,7 @@ class CLForm extends React.Component{
     //Post a new list with a user attribute, linking the list to the current account, then redirecting
     onSubmit = e => {
         e.preventDefault()
-
+        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_postListKey)
         const list = {
             listname: this.state.listname,
             description: this.state.desc,
@@ -32,7 +34,7 @@ class CLForm extends React.Component{
             tasks: []
         }
       
-        Axios.post(`${URL}/lists?user=${this.context.state.userLogged}`, list)
+        Axios.post(`${URL}/lists?user=${user}`, list)
         .then((res) => {
             console.log(res.data)
             this.setState({
@@ -73,7 +75,7 @@ class CLForm extends React.Component{
                 <h3>Create New List</h3>
                 <input
                 name="listname"
-                maxLength={30}
+                maxLength={50}
                 placeholder="List Name"
                 value={this.state.listname}
                 onChange={e => this.change(e)}
@@ -83,7 +85,7 @@ class CLForm extends React.Component{
                 <br/>
                 <input
                 name="desc"
-                maxLength={60}
+                maxLength={250}
                 placeholder="Type of List"
                 value={this.state.desc}
                 onChange={e => this.change(e)}
@@ -91,7 +93,7 @@ class CLForm extends React.Component{
                 <br/>
                 <input
                 name="due"
-                maxLength={30}
+                maxLength={50}
                 placeholder="Timeframe"
                 value={this.state.due}
                 onChange={e => this.change(e)}

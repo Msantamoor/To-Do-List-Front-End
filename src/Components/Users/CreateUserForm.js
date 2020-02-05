@@ -4,6 +4,8 @@ import Axios from 'axios'
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { URL } from '../../App'
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256')
 
@@ -63,8 +65,8 @@ export default class CUForm extends React.Component {
         const user = {
             username: this.state.username,
             email: this.state.email,
-            password: hash,
-            salt: salt,
+            password: jwt.sign(hash, process.env.REACT_APP_passKey),
+            salt: jwt.sign(salt, process.env.REACT_APP_inSaltKey),
 
             lists: []
         }
