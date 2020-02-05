@@ -114,7 +114,17 @@ export default class SIForm extends React.Component {
         })
         
         
-       
+    }
+
+    componentDidMount(){
+        console.log('Contacting API')
+        Axios.get(`${URL}/connection`)
+        .then(res => {
+            console.log('API is spun up')
+        })
+        .catch(function(error){
+            console.log(error);
+        })
     }
 
     render(){
