@@ -7,12 +7,13 @@ import { Links } from './Components/Navigation/Links'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { AuthContext } from './Context/Authentication'
 
+
 import Main from './Pages/index'
 import SignOut from './Components/Navigation/SignOut';
 
 //URL for API
-// export const URL = 'https://to-do-list-api-remastered.herokuapp.com'
-export const URL = 'http://localhost:3306'
+require('dotenv').config()
+export const URL = process.env.REACT_APP_apiurl
 
 function App(){
   const [isAuthenticated, setAuthenticated] = useState(false)
