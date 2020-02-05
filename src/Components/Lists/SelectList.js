@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import ListDisplay from './Lists/ListDisplay';
+import ListDisplay from './ListDisplay';
 import Axios from 'axios'
 import { Redirect } from 'react-router';
-import {AuthContext} from '../Context/Authentication'
-import '../App.css'
-import { URL } from '../App'
+import {AuthContext} from '../../Context/Authentication'
+import '../../App.css'
+import { URL } from '../../App'
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 

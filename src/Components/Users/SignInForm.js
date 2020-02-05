@@ -51,6 +51,8 @@ export default class SIForm extends React.Component {
     //Attempt Sign-in
     onSubmit = async (e)  => {
         e.preventDefault()
+        console.log(process.env.REACT_APP_outSaltKey)
+        console.log(process.env.REACT_APP_signKey)
         Axios.get(`${URL}/users-check?username=${this.state.username}`)
         .then(res => {
             console.log(res)
