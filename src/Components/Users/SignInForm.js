@@ -75,7 +75,7 @@ export default class SIForm extends React.Component {
                 const pepper = sha256(this.state.username)
                 const sp = pepper + sha256(this.state.password)
                 console.log(sp)
-                const hash = jwt.sign(bcrypt.hashSync(sp, salt), process.env.checkKey)
+                const hash = jwt.sign((bcrypt.hashSync(sp, salt)), process.env.REACT_APP_checkKey)
                 console.log(hash)
                 //Pass in username and password to be checked
                 Axios.get(`${URL}/users-login?username=${this.state.username}&password=${hash}`)
