@@ -25,7 +25,7 @@ class CLForm extends React.Component{
     //Post a new list with a user attribute, linking the list to the current account, then redirecting
     onSubmit = e => {
         e.preventDefault()
-        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_postListKey)
+        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_postListKey)
         const list = {
             listname: this.state.listname,
             description: this.state.desc,

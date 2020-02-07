@@ -36,7 +36,7 @@ export default class SelectList extends Component {
 
   //Gets current lists from the DB, filtered by the current userLogged
   refreshLists = () => {
-    const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_getListKey)
+    const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_getListKey)
     Axios.get(`${URL}/lists?user=${user}`)
         .then(res => {
             console.log(res.data)
@@ -97,7 +97,7 @@ export default class SelectList extends Component {
   //Deletes a list by ID, and all tasks with that list attribute
   deleteOneList(id){
     console.log(id)
-    const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_deleteListKey)
+    const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_deleteListKey)
     Axios.delete(`${URL}/lists?user=${user}&list=${id}`)
     .then(res => {
       //Removes this listname from the unavailable lists for duplicate protection.

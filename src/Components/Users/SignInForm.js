@@ -97,8 +97,11 @@ export default class SIForm extends React.Component {
                     //if the username and password does not match, display failed login attempt
                     } else {
                         const auth = jwt.verify(res.data, process.env.REACT_APP_signKey)
+                        console.log(auth)
+                        const store = jwt.sign(auth.data, process.env.REACT_APP_storeKey)
+                        console.log(store)
                         console.log('Password matches')
-                        this.context.authenticate(auth.data)
+                        this.context.authenticate(store)
                         this.setState({ attempt: true})
                         this.setState({ redirect: true})
                         

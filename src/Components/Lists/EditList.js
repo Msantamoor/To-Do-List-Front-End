@@ -39,7 +39,7 @@ class EList extends React.Component{
     onSubmit = e => {
         e.preventDefault()
         const name = this.props.history.location.state.listname
-        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_patchListKey)
+        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_patchListKey)
 
         const list = {
             listname: this.state.listname,

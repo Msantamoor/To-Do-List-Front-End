@@ -37,7 +37,7 @@ class ETask extends React.Component{
     //Patches the selected task, then redirects to task display
     onSubmit = (e) => {
         e.preventDefault()
-        const user = jwt.sign(this.context.state.userLogged, process.env.REACT_APP_patchTaskKey)
+        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_patchTaskKey)
         const id = this.props.history.location.state.id
         const listname = this.context.state.activeList
         const task = {
