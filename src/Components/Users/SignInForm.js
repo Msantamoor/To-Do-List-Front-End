@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import '../../App';
 import { AuthContext } from '../../Context/Authentication';
 import { URL } from '../../App'
+import { GoogleLoginButton } from '../GoogleButton'
 require('dotenv').config()
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256')
@@ -97,7 +98,6 @@ export default class SIForm extends React.Component {
                     //if the username and password does not match, display failed login attempt
                     } else {
                         const auth = jwt.verify(res.data, process.env.REACT_APP_signKey)
-                        console.log(auth)
                         const store = jwt.sign(auth.data, process.env.REACT_APP_storeKey)
                         console.log(store)
                         console.log('Password matches')
@@ -129,6 +129,16 @@ export default class SIForm extends React.Component {
             console.log(error);
         })
     }
+
+    // googleSign(){
+    //     Axios.get(`${URL}/auth/google`)
+    //     .then(res => {
+    //         console.log(res)
+    //     })
+    //     .catch(function(error){
+    //         console.log(error);
+    //     })
+    // }
 
     render(){
         if (this.state.redirect){
@@ -193,8 +203,13 @@ export default class SIForm extends React.Component {
                 <br/>
                 
                 <button disabled={!isEnabled} onClick={e => this.onSubmit(e)}>Sign-In</button>
+                <br/>
+                <br/>
+                <GoogleLoginButton />
+                {/* <button onClick={() => this.googleSign()}>Sign-in with Google</button> */}
             </form>
             <p>New User?</p> <Link to="/CUForm">Create Account</Link>
+            
             </div>
         )
     }
