@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const AuthContext = React.createContext({
-    isAuthenticated: false,
+    isAuthenticated: true,
     userLogged: "none",
     activeList: "none",
     listNum: "",

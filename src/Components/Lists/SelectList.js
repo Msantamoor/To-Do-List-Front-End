@@ -7,6 +7,7 @@ import '../../App.css'
 import { URL } from '../../App'
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const Cookies = require('js-cookie')
 
 export default class SelectList extends Component {
   constructor(props){
@@ -20,7 +21,8 @@ export default class SelectList extends Component {
       clickedButtons: [],
       unavailableLists: [],
       editId: "",
-      listsLoaded: false
+      listsLoaded: false,
+      userId: Cookies.get('jwt')
       
     }
 
@@ -36,7 +38,8 @@ export default class SelectList extends Component {
 
   //Gets current lists from the DB, filtered by the current userLogged
   refreshLists = () => {
-    const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_getListKey)
+    console.log(this.state.userId)
+    const user = jwt.sign(jwt.verify(this.state.userId, process.env.REACT_APP_signKey), process.env.REACT_APP_getListKey)
     Axios.get(`${URL}/lists?user=${user}`)
         .then(res => {
             console.log(res.data)
