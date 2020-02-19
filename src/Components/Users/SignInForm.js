@@ -101,7 +101,7 @@ export default class SIForm extends React.Component {
                     } else {
                         console.log(res.data)
                         console.log('Password matches')
-                        Cookies.set('jwt', res.data, { expires: new Date(Date.now() + (1000 * 60))})
+                        Cookies.set('jwt', res.data, { expires: new Date(Date.now() + ((1000 * 60) * 60))})
                         this.context.authenticate()
                         this.setState({ attempt: true})
                         this.setState({ redirect: true})
