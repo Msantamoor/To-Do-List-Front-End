@@ -5,6 +5,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { URL } from '../../App'
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const Cookies = require('js-cookie')
 
 
 class CLForm extends React.Component{
@@ -25,7 +26,7 @@ class CLForm extends React.Component{
     //Post a new list with a user attribute, linking the list to the current account, then redirecting
     onSubmit = e => {
         e.preventDefault()
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_postListKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_postListKey)
         const list = {
             listname: this.state.listname,
             description: this.state.desc,
@@ -53,6 +54,11 @@ class CLForm extends React.Component{
     
     //Get the unavailable listnames to prevent duplicates
     componentDidMount(){
+        if(Cookies.get('jwt')){
+            this.context.authenticate()
+        } else {
+            this.context.signOut()
+        }
         this.setState({ unavailableLists: this.props.history.location.state.unavailableLists })
     }
 
@@ -62,6 +68,8 @@ class CLForm extends React.Component{
     }
     
     render () {
+
+
         //Redirect to list select after a successful post, or by using the back button
         if (this.state.redirect){
             return (

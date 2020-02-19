@@ -6,6 +6,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { URL } from '../../App'
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const Cookies = require('js-cookie')
 
 
 
@@ -37,7 +38,7 @@ class ETask extends React.Component{
     //Patches the selected task, then redirects to task display
     onSubmit = (e) => {
         e.preventDefault()
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_patchTaskKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_patchTaskKey)
         const id = this.props.history.location.state.id
         const listname = this.context.state.activeList
         const task = {
@@ -60,6 +61,11 @@ class ETask extends React.Component{
 
     //Retrieves previous value of task fields for easier editting, as well as unavailable task names.
     componentDidMount(){
+        if(Cookies.get('jwt')){
+            this.context.authenticate()
+        } else {
+            this.context.signOut()
+        }
         this.setState({
             name: this.props.history.location.state.name,
             description: this.props.history.location.state.description,
@@ -74,7 +80,6 @@ class ETask extends React.Component{
     }
     
     render () {
-
         //Redirects to the create task form and the task display
         if(this.state.redirect){
             return (

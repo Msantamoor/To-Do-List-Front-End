@@ -8,6 +8,7 @@ import '../../form.css'
 import { URL } from '../../App'
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const Cookies = require('js-cookie')
 
 
 
@@ -54,7 +55,7 @@ class CTForm extends React.Component{
 
     //Gets updated tasks from the server, filtered by user and list attributes assigned on creation
     refreshTasks(){
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_getTaskKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_getTaskKey)
         Axios.get(`${URL}/tasks?user=${user}&list=${this.context.state.activeList}&index=${this.context.state.listNum}`)
         .then(res => {
             console.log(this.context.state.listNum)
@@ -72,7 +73,7 @@ class CTForm extends React.Component{
     //Posts a new task to the DB with user and list context values as attributes for filtering
     onSubmit = (e) => {
         e.preventDefault()
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_postTaskKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_postTaskKey)
         const task = {
             name: this.state.name,
             description: this.state.description,
@@ -94,6 +95,11 @@ class CTForm extends React.Component{
 
     //Refreshes Tasks on mount
     componentDidMount = () => {
+        if(Cookies.get('jwt')){
+            this.context.authenticate()
+        } else {
+            this.context.signOut()
+        }
         this.refreshTasks()
     }
     
@@ -144,7 +150,7 @@ class CTForm extends React.Component{
     //Patches a specific task to update its completed attribute, displaying greyed out css
     //Primes task to be deleted with the other completed tasks in bulk
     isCompleted(id){
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_patchCompleteKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_patchCompleteKey)
             if(this.state.completedTasks.includes(id)){
                 const task = "false"
                 Axios.patch(`${URL}/tasks-complete?user=${user}&id=${id}&list=${this.context.state.activeList}&complete=${task}`)
@@ -171,7 +177,7 @@ class CTForm extends React.Component{
 
     //Deletes a specific task by ID
     deleteOneTask(id){
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_deleteTaskKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_deleteTaskKey)
         console.log(id)
         Axios.delete(`${URL}/tasks?user=${user}&id=${id}&list=${this.context.state.activeList}`)
         .then(res => {
@@ -186,7 +192,7 @@ class CTForm extends React.Component{
 
     //Deletes all tasks in the list with completed: true attributes
     deleteDoneTasks(){
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_deleteCompleteKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_deleteCompleteKey)
         Axios.delete(`${URL}/tasks-complete?user=${user}&list=${this.context.state.activeList}`)
         .then(res => {
             console.log(res.data)
@@ -201,7 +207,7 @@ class CTForm extends React.Component{
     //Deletes all currently clicked tasks by sending an array of any length to be converted into aggregate query syntax.
     //All specified tasks are deleted with one Mongo deleteMany function
     deleteSelectedTasks(){
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_deleteSelectKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_deleteSelectKey)
         const names = this.state.clickedTasks
             Axios.delete(`${URL}/tasks-selected?user=${user}&list=${this.context.state.activeList}`, {
                 params: {
@@ -246,6 +252,7 @@ class CTForm extends React.Component{
     }
 
     render () {
+
 
         //Redirects to the edit list form, passing in the current list values to populate the fields for easier editting
         if(this.state.redirect){

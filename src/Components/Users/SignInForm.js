@@ -11,6 +11,8 @@ require('dotenv').config()
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256')
 const jwt = require('jsonwebtoken');
+const Cookies = require('js-cookie')
+
 
 //Checks for valid form entries
 function validate(username, password) {
@@ -97,11 +99,10 @@ export default class SIForm extends React.Component {
                         console.log(`Matching Failed ${this.state.password}`)
                     //if the username and password does not match, display failed login attempt
                     } else {
-                        const auth = jwt.verify(res.data, process.env.REACT_APP_signKey)
-                        const store = jwt.sign(auth.data, process.env.REACT_APP_storeKey)
-                        console.log(store)
+                        console.log(res.data)
                         console.log('Password matches')
-                        this.context.authenticate(store)
+                        Cookies.set('jwt', res.data, { expires: new Date(Date.now() + (1000 * 60))})
+                        this.context.authenticate()
                         this.setState({ attempt: true})
                         this.setState({ redirect: true})
                         
@@ -120,6 +121,10 @@ export default class SIForm extends React.Component {
     }
 
     componentDidMount(){
+        if(Cookies.get('jwt')){
+            this.context.authenticate()
+            this.setState({ redirect: true });
+        }
         console.log('Contacting API')
         Axios.get(`${URL}/connection`)
         .then(res => {
@@ -130,17 +135,9 @@ export default class SIForm extends React.Component {
         })
     }
 
-    // googleSign(){
-    //     Axios.get(`${URL}/auth/google`)
-    //     .then(res => {
-    //         console.log(res)
-    //     })
-    //     .catch(function(error){
-    //         console.log(error);
-    //     })
-    // }
 
     render(){
+
         if (this.state.redirect){
             return(
                 <Redirect push to={'Select'}/>

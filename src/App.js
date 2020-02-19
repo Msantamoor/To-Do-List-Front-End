@@ -24,9 +24,8 @@ function App(){
 })
 
 //Provides the logged in state
-  const authenticate = (id) => {
+  const authenticate = () => {
     setAuthenticated(true)
-    setState({ userLogged: id })
   }
 
   const signout = () => {
@@ -34,11 +33,10 @@ function App(){
   }
 
   //Sets the userlogged context value and the activeList context Value for data filtering.
-  const identify = (user, list, pos) => {
-    console.log(user)
+  const identify = (list, pos) => {
     console.log(list)
     console.log(pos)
-    setState({ userLogged: user, activeList: list, listNum: pos })
+    setState({activeList: list, listNum: pos })
   }
   
   

@@ -7,6 +7,7 @@ import '../../form.css'
 import { URL } from '../../App'
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const Cookies = require('js-cookie')
 
 
 
@@ -35,11 +36,11 @@ class EList extends React.Component{
 
     };
 
-    //Patches the list, as well as all tasks with the list attribute so they maintain their association.
+    //Patches the list.
     onSubmit = e => {
         e.preventDefault()
         const name = this.props.history.location.state.listname
-        const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_patchListKey)
+        const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_patchListKey)
 
         const list = {
             listname: this.state.listname,
@@ -62,6 +63,11 @@ class EList extends React.Component{
 
     //Retrieving current values of the list to populate the fields for easier editting
     componentDidMount(){
+        if(Cookies.get('jwt')){
+            this.context.authenticate()
+        } else {
+            this.context.signOut()
+        }
         this.setState({
             listname: this.props.history.location.state.listname,
             description: this.props.history.location.state.description,

@@ -21,8 +21,7 @@ export default class SelectList extends Component {
       clickedButtons: [],
       unavailableLists: [],
       editId: "",
-      listsLoaded: false,
-      userId: Cookies.get('jwt')
+      listsLoaded: false
       
     }
 
@@ -38,8 +37,7 @@ export default class SelectList extends Component {
 
   //Gets current lists from the DB, filtered by the current userLogged
   refreshLists = () => {
-    console.log(this.state.userId)
-    const user = jwt.sign(jwt.verify(this.state.userId, process.env.REACT_APP_signKey), process.env.REACT_APP_getListKey)
+    const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_getListKey)
     Axios.get(`${URL}/lists?user=${user}`)
         .then(res => {
             console.log(res.data)
@@ -54,6 +52,11 @@ export default class SelectList extends Component {
 
   //Refreshes to grab current lists on mount
   componentDidMount(){
+    if(Cookies.get('jwt')){
+      this.context.authenticate()
+  } else {
+      this.context.signOut()
+  }
   this.refreshLists()
   }
 
@@ -100,7 +103,7 @@ export default class SelectList extends Component {
   //Deletes a list by ID, and all tasks with that list attribute
   deleteOneList(id){
     console.log(id)
-    const user = jwt.sign(jwt.verify(this.context.state.userLogged, process.env.REACT_APP_storeKey), process.env.REACT_APP_deleteListKey)
+    const user = jwt.sign(jwt.verify(Cookies.get('jwt'), process.env.REACT_APP_signKey), process.env.REACT_APP_deleteListKey)
     Axios.delete(`${URL}/lists?user=${user}&list=${id}`)
     .then(res => {
       //Removes this listname from the unavailable lists for duplicate protection.
@@ -128,6 +131,7 @@ export default class SelectList extends Component {
 
   render() {
 
+
     //Redirects to task display, setting the context activeList value to filter for relevant tasks,
     //resetting the userLogged context value as it's current value to prevent the logged state from being cleared
     if (this.state.redirect) {
@@ -135,7 +139,7 @@ export default class SelectList extends Component {
         return(
           <AuthContext.Consumer>
             {({identify}) => (
-                <Redirect push={identify(this.context.state.userLogged, this.state.selection, this.state.listNumber)} to={'/CTForm'}/>
+                <Redirect push={identify(this.state.selection, this.state.listNumber)} to={'/CTForm'}/>
             )}
           </AuthContext.Consumer>
           
