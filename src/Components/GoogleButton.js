@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme =>
     const classes = useStyles({})
   
     return (
-      <a href={`${process.env.REACT_APP_apiurl}/auth/google`} className={classes.button}>
+      <button className={classes.button}>
         <div className={classes.wrapper}>
           <svg
             className={classes.icon}
@@ -77,7 +77,7 @@ const useStyles = makeStyles(theme =>
         </svg>
       </div>
       <p className={classes.text}>Login with Google</p>
-    </a>
+    </button>
   )
 }
 

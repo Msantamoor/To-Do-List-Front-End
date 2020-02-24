@@ -135,20 +135,20 @@ export default class SIForm extends React.Component {
         })
     }
 
-    // signGoogle = async (e) => {
-    //     e.preventDefault()
-    //     Axios.get(`${URL}/auth/google`)
-    //     .then(res => {
-    //         console.log(res)
-    //         Cookies.set('jwt', res.data, { expires: new Date(Date.now() + ((1000 * 60) * 60))})
-    //         this.context.authenticate()
-    //         this.setState({ attempt: true})
-    //         this.setState({ redirect: true})
-    //     })
-    //     .catch(function(error){
-    //         console.log(error);
-    //     })
-    // }
+    signGoogle = async (e) => {
+        e.preventDefault()
+        Axios.get(`${URL}/auth/google`).withCredentials=true
+        .then(res => {
+            console.log(res)
+            Cookies.set('jwt', res.data, { expires: new Date(Date.now() + ((1000 * 60) * 60))})
+            this.context.authenticate()
+            this.setState({ attempt: true})
+            this.setState({ redirect: true})
+        })
+        .catch(function(error){
+            console.log(error);
+        })
+    }
 
 
     render(){
