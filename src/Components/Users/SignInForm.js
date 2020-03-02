@@ -219,8 +219,8 @@ export default class SIForm extends React.Component {
                 <br/>
                 
             </form>
-            <GoogleLoginButton onClick={e => this.signGoogle(e)}/>
-                {/* <button onClick={() => this.signGoogle()}>Sign-in with Google</button> */}
+            {/* <GoogleLoginButton onClick={e => this.signGoogle(e)}/>
+                <button onClick={() => this.signGoogle()}>Sign-in with Google</button> */}
             <p>New User?</p> <Link to="/CUForm">Create Account</Link>
             
             </div>
