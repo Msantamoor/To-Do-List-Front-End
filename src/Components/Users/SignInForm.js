@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import '../../App';
 import { AuthContext } from '../../Context/Authentication';
 import { URL } from '../../App'
-import { GoogleLoginButton } from '../GoogleButton'
+// import { GoogleLoginButton } from '../GoogleButton'
 require('dotenv').config()
 const bcrypt = require('bcryptjs');
 const sha256 = require('sha256')
