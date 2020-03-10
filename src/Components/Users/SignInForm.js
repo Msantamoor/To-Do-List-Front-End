@@ -191,7 +191,7 @@ export default class SIForm extends React.Component {
                 filled={showValid('username') ? "good" : ""}
                 onBlur={this.handleBlur('username')}
                 placeholder="Username"
-                value={this.state.username} 
+                value={this.state.username}
                 onChange={e => this.change(e)}
                 />
                 <br/>
