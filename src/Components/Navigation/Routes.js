@@ -8,6 +8,7 @@ import SIForm from '../Users/SignInForm'
 import SelectList from '../Lists/SelectList'
 import EditTask from '../Tasks/EditTask'
 import EditList from '../Lists/EditList'
+import FPass from '../Users/ForgotPassword'
 
 export const Routes = () => {
     return (  
@@ -15,7 +16,10 @@ export const Routes = () => {
         <div>
           <Switch>
           <Route exact path="/">
-            <SIForm/>
+            <SIForm />
+          </Route>
+          <Route path="/FPass">
+            <FPass/>
           </Route>
           <PrivateRoute path="/CTForm">
             <CTForm />
