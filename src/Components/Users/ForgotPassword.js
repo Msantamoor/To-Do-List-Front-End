@@ -19,16 +19,20 @@ export default class FPass extends React.Component{
     }
 
     onSubmit = async (e)  => {
-        Axios.get(`${URL}/users-email-reset`)
+        e.preventDefault()
+        Axios.get(`${URL}/users-email-reset?email=${this.state.email}`)
         .then(res => {
-            if(res === true){
+            console.log(res)
+            if(res.data === false){
                 this.setState({sent: true})
                 this.setState({wrong: false})
+                console.log('Email sent')
             }
 
-            if(res === false){
+            if(res.data === true){
                 this.setState({wrong: true})
                 this.setState({sent: false})
+                console.log('No Matching Email')
             }
 
         })

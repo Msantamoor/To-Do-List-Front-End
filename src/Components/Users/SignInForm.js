@@ -108,9 +108,6 @@ export default class SIForm extends React.Component {
                         
                     }
                 })
-                .catch(function(error){
-                    console.log(error);
-                })
             }
         })
         .catch(function(error){
