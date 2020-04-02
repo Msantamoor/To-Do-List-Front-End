@@ -20,13 +20,17 @@ export default class FPass extends React.Component{
 
     onSubmit = async (e)  => {
         e.preventDefault()
-        Axios.get(`${URL}/users-email-reset?email=${this.state.email}`)
+        Axios.get(`${URL}/users-emails?email=${this.state.email}`)
         .then(res => {
-            console.log(res)
+            console.log(res.data)
             if(res.data === false){
-                this.setState({sent: true})
-                this.setState({wrong: false})
-                console.log('Email sent')
+                Axios.get(`${URL}/users-email-reset?email=${this.state.email}`)
+                .then(res => {
+                    this.setState({sent: true})
+                    this.setState({wrong: false})
+                    console.log(res.data)
+                    console.log('Email Sent')
+                })
             }
 
             if(res.data === true){
