@@ -9,6 +9,7 @@ import SelectList from '../Lists/SelectList'
 import EditTask from '../Tasks/EditTask'
 import EditList from '../Lists/EditList'
 import FPass from '../Users/ForgotPassword'
+import RPass from '../Users/ResetPassword'
 
 export const Routes = () => {
     return (  
@@ -20,6 +21,9 @@ export const Routes = () => {
           </Route>
           <Route path="/FPass">
             <FPass/>
+          </Route>
+          <Route path="/RPass">
+            <RPass/>
           </Route>
           <PrivateRoute path="/CTForm">
             <CTForm />
