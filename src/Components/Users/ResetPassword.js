@@ -9,7 +9,9 @@ export default class RPass extends React.Component{
 
     state = {
         password: "",
-        confirm: ""
+        confirm: "",
+        successful: false,
+        failed: false
     }
 
 
@@ -21,7 +23,19 @@ export default class RPass extends React.Component{
 
     onSubmit = async (e) => {
         e.preventDefault()
-        Axios.patch(`${URL}/users-pass-change?user=${this.props.location.query.user}`)
+        Axios.patch(`${URL}/users-pass-change?user=${this.props.location.query.user}&new=${this.state.password}`)
+        .then(res => {
+            if(res.data === true){
+                this.setState({successful: true})
+            }
+            else {
+                this.setState({failed: true})
+            }
+
+        })
+        .catch(function(error){
+            console.log(error)
+        })
 
     }
 
