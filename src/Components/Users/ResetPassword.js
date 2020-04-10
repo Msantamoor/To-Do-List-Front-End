@@ -23,7 +23,10 @@ export default class RPass extends React.Component{
 
     onSubmit = async (e) => {
         e.preventDefault()
-        Axios.patch(`${URL}/users-pass-change?user=${this.props.location.query.user}&new=${this.state.password}`)
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('user');
+
+        Axios.patch(`${URL}/users-pass-change?user=${myParam}&new=${this.state.password}`)
         .then(res => {
             if(res.data === true){
                 this.setState({successful: true})
