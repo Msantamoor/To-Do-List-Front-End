@@ -3,6 +3,9 @@ import '../../form.css'
 import Axios from 'axios';
 import { URL } from '../../App'
 require('dotenv').config()
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs');
+const sha256 = require('sha256')
 
 
 export default class RPass extends React.Component{
@@ -24,9 +27,22 @@ export default class RPass extends React.Component{
     onSubmit = async (e) => {
         e.preventDefault()
         const urlParams = new URLSearchParams(window.location.search);
-        const myParam = urlParams.get('user');
+        const id = urlParams.get('id');
+        const username = urlParams.get('username')
 
-        Axios.patch(`${URL}/users-pass-change?user=${myParam}&new=${this.state.password}`)
+        const pepper = sha256(username)
+        const salt = bcrypt.genSaltSync(10);
+        const sp = pepper + sha256(this.state.password)
+        console.log(sp)
+        const hash = bcrypt.hashSync(sp, salt)
+        console.log(hash)
+        
+        const idSign = jwt.sign(id, process.env.REACT_APP_changeKey)
+        const hashSign = jwt.sign(hash, process.env.REACT_APP_passKey)
+        const saltSign = jwt.sign(salt, process.env.REACT_APP_inSaltKey)
+
+
+        Axios.patch(`${URL}/users-pass-change?id=${idSign}&new=${hashSign}&salt=${saltSign}`)
         .then(res => {
             if(res.data === true){
                 this.setState({successful: true})
