@@ -55,7 +55,7 @@ export default class FPass extends React.Component{
             value={this.state.email}
             onChange={e => this.change(e)}
             />
-            <p className={this.state.sent ? "shown-messages" : "hidden-messages"}>Email Sent</p>
+            <p className={this.state.sent ? "shown-messages" : "hidden-messages"}>Email Sent, check your email for the reset link</p>
             <p className={this.state.wrong ? "shown-messages" : "hidden-messages"}>There is no account associated with that email.</p>
             <br/>
             <button onClick={e => this.onSubmit(e)}>Send Request</button>
