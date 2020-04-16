@@ -81,6 +81,7 @@ export default class RPass extends React.Component{
                 />
                 <p className={this.state.password !== this.state.confirm ? "shown-messages" : "hidden-messages"}>Passwords do not Match</p>
                 <p className={this.state.successful ? "shown-messages" : "hidden-messages"}>Password successfully reset</p>
+                <p className={this.state.failed ? "shown-messages" : "hidden-messages"}>Password Reset failed, there may be a connection issue</p>
             <br/>
                 <button
                 className={this.state.successful ? "hidden-messages" : "shown-messages"}
