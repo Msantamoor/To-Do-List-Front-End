@@ -2,6 +2,7 @@ import React from 'react';
 import '../../form.css'
 import Axios from 'axios';
 import { URL } from '../../App'
+import { Link } from 'react-router-dom';
 require('dotenv').config()
 
 export default class FPass extends React.Component{
@@ -59,6 +60,9 @@ export default class FPass extends React.Component{
             <p className={this.state.wrong ? "shown-messages" : "hidden-messages"}>There is no account associated with that email.</p>
             <br/>
             <button onClick={e => this.onSubmit(e)}>Send Request</button>
+            <br/>
+            <p>No account with your email?</p> 
+            <Link to="/CUForm">Create one</Link>
 
 
         </form>
